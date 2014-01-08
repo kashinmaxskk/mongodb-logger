@@ -19,6 +19,31 @@ describe('Koa MongoDB Logger', function () {
     })
   })
 
+  describe('.socket', function () {
+    it('should save a socket id', function (done) {
+      var app = koa()
+      app.use(logger(app, collection))
+      app.use(function* (next) {
+        this.status = 204
+      })
+
+      request(app.listen())
+      .get('/')
+      .expect(204, function (err, res) {
+        if (err)
+          return done(err)
+
+        latest(function (err, log) {
+          if (err)
+            return done(err)
+
+          log.socket.should.be.a.String
+          done()
+        })
+      })
+    })
+  })
+
   describe('.request', function () {
     it('should save the request', function (done) {
       var app = koa()
@@ -149,7 +174,7 @@ describe('Koa MongoDB Logger', function () {
           log.event.start.should.be.a.Date
           log.event.end.should.be.a.Date
           log.event.finish.should.be.a.Date
-          log.event.close.should.be.a.Date
+          // log.event.close.should.be.a.Date
           log.event.header.should.be.a.Date
           done()
         })
