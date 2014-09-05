@@ -4,7 +4,9 @@ Log and profile your Koa requests to MongoDB.
 
 ```js
 var koa = require('koa')
-var logger = require('logger')(app, collection)
+var logger = require('logger')({
+  collection: // some mongodb collection
+})
 
 var app = koa()
 app.use(logger)
